@@ -4,3 +4,92 @@
 *:after {
   box-sizing: border-box;
 }
+
+body{
+  font-family: Arial, sans-seriff;
+  background-color: #f0f0f0;
+  color: #333;
+  line-height: 1.6;
+}
+
+#wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+
+  /* background checkerboard */
+  background-image: url("/images/site/checkerboard.jpg");
+  background-repeat: no-repeat;
+  background-position: center;  /* adjust as needed */
+  background-size: cover;       /* scale to cover the wrapper */
+}
+
+
+/* White content area */
+.content {
+  max-width: 1200px;
+  margin: 0 auto;               /* center horizontally */
+  background-color: white;
+  padding: 0;                   /* no padding inside */
+  box-sizing: border-box;
+}
+
+
+
+.delorean-upgrades .upgrades-images {
+  background-color: #4691e2;  
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 20px;                          
+  justify-items: center;               
+  align-items: center;
+}
+
+.delorean-upgrades .upgrades-images img {
+  width: 100px;  
+  height: auto;
+  display: block;
+}
+
+
+.flex-container {
+  display: flex;
+  gap: 20px; 
+
+}
+
+.delorean-upgrades,
+.dmc-delorean-reviews {
+  flex: 1;
+  width: 50%;       
+  box-sizing: border-box; 
+  background-color:white; 
+  padding: 10px;
+}
+
+h2{
+  text-align: center;
+  margin-bottom:20px;
+}
+
+section {
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+section img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-top: 10px;
+}
+
+ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-top: 10px;
+}
