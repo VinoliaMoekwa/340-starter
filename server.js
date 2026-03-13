@@ -14,6 +14,7 @@ const static = require("./routes/static")
 app.get("/", function(req,res) {
   res.render("index", { title: "Home" })
 })
+app.use(express.static("public"));
 
 /* ***********************
  * Routes
@@ -28,8 +29,8 @@ app.use(static)
  * Local Server Information
  * Values from .env (environment) file
  *************************/
-const port = process.env.PORT
-const host = process.env.HOST
+const port = process.env.PORT || 3001
+const host = process.env.HOST || "localhost"
 
 /* ***********************
  * Log statement to confirm server operation

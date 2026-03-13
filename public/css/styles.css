@@ -1,6 +1,124 @@
-/******* Change Box Model ***************/
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body with checkered background */
+body {
+    background-image: 
+        linear-gradient(45deg, #000 25%, transparent 25%),
+        linear-gradient(-45deg, #000 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #000 75%),
+        linear-gradient(-45deg, transparent 75%, #000 75%);
+    background-size: 40px 40px;
+    background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Main wrapper */
+.wrapper {
+    max-width: 900px;
+    width: 100%;
+    background: #fff;
+    border: 4px solid #00bcd4;
+}
+
+/* Hero Section */
+main {
+    padding: 24px;
+}
+
+main h1 {
+    font-size: 28px;
+    color: #000;
+    margin-bottom: 16px;
+}
+
+main h2 {
+    font-size: 22px;
+    color: #000;
+    margin-bottom: 8px;
+}
+
+main p {
+    color: #00bcd4;
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+.own-today, .delorean {
+    max-width: 400px;
+    width: 100%;
+    margin: 12px 0;
+}
+
+/* Main Content Section */
+.main-content {
+    display: flex;
+    gap: 30px;
+    margin-top: 24px;
+}
+
+/* Delorean Upgrades - first column (2x2 images) */
+.delorean-upgrades {
+    flex: 1;
+}
+
+.delorean-upgrades h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #000;
+}
+
+.upgrades-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.delorean-upgrades img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border: 1px solid #ddd;
+    padding: 8px;
+    background: #f9f9f9;
+}
+
+.delorean-upgrades p {
+    color: #00bcd4;
+    font-size: 13px;
+    margin-top: 4px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Delorean Reviews - second column (one column straight down) */
+.delorean-reviews {
+    flex: 1;
+}
+
+.delorean-reviews h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #000;
+}
+
+.delorean-reviews p {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+/* Footer */
+footer {
+    padding: 16px 24px;
+    font-size: 12px;
+    color: #666;
 }
