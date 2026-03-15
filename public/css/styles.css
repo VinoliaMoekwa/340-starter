@@ -1,124 +1,346 @@
-/* Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Body with checkered background */
+/* === Page Background & Layout === */
 body {
-    background-image: 
-        linear-gradient(45deg, #000 25%, transparent 25%),
-        linear-gradient(-45deg, #000 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, #000 75%),
-        linear-gradient(-45deg, transparent 75%, #000 75%);
-    background-size: 40px 40px;
-    background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
-    display: flex;
-    justify-content: center;
-    padding: 20px;
+  background-image: url("/images/site/checkerboard.jpg");
+  background-repeat: repeat;
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Main wrapper */
+/* Blue Wrapper */
 .wrapper {
-    max-width: 900px;
-    width: 100%;
-    background: #fff;
-    border: 4px solid #00bcd4;
+  background: #1a1a8a;
+  max-width: 960px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 15px;
 }
 
-/* Hero Section */
+/* White Content Area */
 main {
-    padding: 24px;
+  background: #fff;
+  padding: 20px 30px;
+  border: 3px solid #00bcd4;
 }
 
-main h1 {
-    font-size: 28px;
-    color: #000;
-    margin-bottom: 16px;
+
+
+/* === Header === */
+#top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-main h2 {
-    font-size: 22px;
-    color: #000;
-    margin-bottom: 8px;
+.siteName a {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
 }
 
-main p {
-    color: #00bcd4;
-    font-size: 16px;
-    margin-bottom: 6px;
+#tools a {
+  font-size: 0.85rem;
+  color: #fff;
+  text-decoration: none;
 }
 
-.own-today, .delorean {
-    max-width: 400px;
-    width: 100%;
-    margin: 12px 0;
+#tools a:hover {
+  text-decoration: underline;
 }
 
-/* Main Content Section */
+/* === Navigation === */
+nav {
+  background: black;
+  margin-bottom: 20px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul li {
+  flex: 1;
+  text-align: center;
+}
+
+nav ul li a {
+  display: block;
+  padding: 10px 0;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+nav ul li a:hover {
+  background: #333;
+}
+
+/* === Hero Section === */
+h1 {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin: 20px 0 10px;
+}
+
+.hero-section {
+  position: relative;
+  margin-bottom: 30px;
+  min-height: 200px;
+}
+
+.delorean-info {
+  position: relative;
+  z-index: 2;
+}
+
+.delorean-info h2 {
+  color: #e63946;
+  font-size: 1.4rem;
+  margin-bottom: 5px;
+}
+
+.delorean-info p {
+  color: #2a9d8f;
+  font-size: 0.95rem;
+  margin: 2px 0;
+  font-weight: bold;
+}
+
+.own-today {
+  width: 120px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.hero-vehicle {
+  position: absolute;
+  left: 20%;
+  top: 30px;
+}
+
+.delorean {
+  width: 380px;
+}
+
+/* === Main Content — Two Column Layout === */
 .main-content {
-    display: flex;
-    gap: 30px;
-    margin-top: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
-/* Delorean Upgrades - first column (2x2 images) */
-.delorean-upgrades {
-    flex: 1;
-}
-
-.delorean-upgrades h3 {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 16px;
-    color: #000;
+.main-content > h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0;
+  grid-column: 1;
 }
 
 .upgrades-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+  grid-column: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
 }
 
-.delorean-upgrades img {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-    border: 1px solid #ddd;
-    padding: 8px;
-    background: #f9f9f9;
-}
-
-.delorean-upgrades p {
-    color: #00bcd4;
-    font-size: 13px;
-    margin-top: 4px;
-    font-weight: bold;
-    text-align: center;
-}
-
-/* Delorean Reviews - second column (one column straight down) */
 .delorean-reviews {
-    flex: 1;
+  grid-column: 2;
+  grid-row: 1 / span 3;
 }
 
+.upgrade-card {
+  text-align: center;
+  background: #1a1a8a;
+  border-radius: 6px;
+  padding: 15px 10px 10px;
+}
+
+.upgrade-card img {
+  width: 100%;
+  height: 100px;
+  object-fit: contain;
+}
+
+.upgrade-card p {
+  color: #2a9d8f;
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+/* === Reviews === */
 .delorean-reviews h3 {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 16px;
-    color: #000;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
 }
 
-.delorean-reviews p {
-    font-size: 14px;
-    color: #333;
-    margin-bottom: 6px;
+.delorean-reviews ul {
+  list-style-type: disc;
+  padding-left: 20px;
 }
 
-/* Footer */
+.delorean-reviews li {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+/* === Footer === */
 footer {
-    padding: 16px 24px;
-    font-size: 12px;
-    color: #666;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #666;
+  padding: 15px 0 5px;
+  margin-top: 20px;
+}
+
+/* === Tablet — 768px and below === */
+@media (max-width: 768px) {
+  body {
+    background-image: url("/images/site/small_check.png");
+    padding: 10px;
+  }
+
+  .wrapper {
+    width: 95%;
+    padding: 10px;
+  }
+
+  main {
+    padding: 15px 20px;
+  }
+
+  .siteName a {
+    font-size: 1.4rem;
+  }
+
+  nav ul li a {
+    font-size: 0.8rem;
+    padding: 8px 0;
+  }
+
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  .hero-section {
+    min-height: 150px;
+  }
+
+  .hero-vehicle {
+    left: 30%;
+  }
+
+  .delorean {
+    width: 280px;
+  }
+
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+
+  .main-content > h3 {
+    grid-column: 1;
+  }
+
+  .upgrades-grid {
+    grid-column: 1;
+  }
+
+  .delorean-reviews {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+/* === Mobile — 480px and below === */
+@media (max-width: 480px) {
+  body {
+    padding: 5px;
+  }
+
+  .wrapper {
+    width: 100%;
+    padding: 5px;
+  }
+
+  main {
+    padding: 10px 15px;
+  }
+
+  .siteName a {
+    font-size: 1.2rem;
+  }
+
+  #tools a {
+    font-size: 0.75rem;
+  }
+
+  nav ul {
+    flex-wrap: wrap;
+  }
+
+  nav ul li {
+    flex: none;
+    width: 33.33%;
+  }
+
+  nav ul li a {
+    font-size: 0.75rem;
+    padding: 6px 0;
+  }
+
+  h1 {
+    font-size: 1.1rem;
+  }
+
+  .hero-section {
+    min-height: auto;
+  }
+
+  .hero-vehicle {
+    position: relative;
+    left: auto;
+    top: auto;
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  .delorean {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .delorean-info h2 {
+    font-size: 1.1rem;
+  }
+
+  .delorean-info p {
+    font-size: 0.85rem;
+  }
+
+  .own-today {
+    width: 100px;
+  }
+
+  .upgrades-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .upgrade-card img {
+    height: 80px;
+  }
+
+  .delorean-reviews li {
+    font-size: 0.8rem;
+  }
 }
