@@ -19,7 +19,8 @@ invCont.buildByClassificationId = async function (req, res, next) {
   } else {
     const classifications = await invModel.getClassifications()
     const rows = classifications && classifications.rows ? classifications.rows : []
-    const match = rows.find((item) => item.classification_id == classification_id)
+    const parsedClassificationId = Number(classification_id)
+    const match = rows.find((item) => Number(item.classification_id) === parsedClassificationId)
     if (match) {
       className = match.classification_name
     }

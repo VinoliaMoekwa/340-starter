@@ -50,8 +50,8 @@ Util.getNav = async function (req, res, next) {
 * Build the classification view HTML
 * ************************************ */
 Util.buildClassificationGrid = async function(data){
-  let grid
-  if(data.length > 0){
+  let grid = ""
+     if(Array.isArray(data) && data.length > 0){
     grid = '<ul id="inv-display">'
     data.forEach(vehicle => { 
       grid += '<li>'
@@ -74,7 +74,7 @@ Util.buildClassificationGrid = async function(data){
     })
     grid += '</ul>'
   } else { 
-    grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+    grid = '<p class="notice">Sorry, no matching vehicles could be found.</p>'
   }
   return grid
 }
@@ -83,28 +83,40 @@ Util.buildClassificationGrid = async function(data){
  * Build HTML for a single vehicle detail view
  **************************************** */
 Util.buildVehicleDetail = async function (vehicle) {
-    const priceFormatter = new Intl.NumberFormat('en-US', {
+  const priceFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 0,
   })
   const milesFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 })
+   const imagePath = vehicle.inv_image && String(vehicle.inv_image).trim().length > 0
+    ? (String(vehicle.inv_image).startsWith('/') ? vehicle.inv_image : `/${vehicle.inv_image}`)
+    : '/images/vehicles/no-image.png'
 
+  const make = vehicle.inv_make || 'Unknown make'
+  const model = vehicle.inv_model || 'Unknown model'
+  const year = vehicle.inv_year || 'Unknown year'
+  const color = vehicle.inv_color || 'Not listed'
+  const description = vehicle.inv_description || 'No description provided.'
+  const classificationName = vehicle.classification_name || 'Unclassified'
   return `
     <section class="vehicle-detail">
       <div class="vehicle-detail-grid">
-        <div class="vehicle-detail-image">
-          <img src="${vehicle.inv_image}" alt="${vehicle.inv_make} ${vehicle.inv_model}" />
+       <img src="${imagePath}" alt="${make} ${model}" loading="lazy" />
+          
         </div>
         <article class="vehicle-detail-info">
-         <p class="vehicle-price"><strong>Price:</strong> ${priceFormatter.format(vehicle.inv_price)}</p>
-          <p class="vehicle-mileage"><strong>Mileage:</strong> ${milesFormatter.format(vehicle.inv_miles)} miles</p>
-          <p class="vehicle-make"><strong>Make:</strong> ${vehicle.inv_make}</p>
-          <p class="vehicle-model"><strong>Model:</strong> ${vehicle.inv_model}</p>
-          <p class="vehicle-year"><strong>Year:</strong> ${vehicle.inv_year}</p>
-          <p class="vehicle-color"><strong>Color:</strong> ${vehicle.inv_color}</p>
-          <p class="vehicle-classification"><strong>Classification:</strong> ${vehicle.classification_name}</p>
-          <p class="vehicle-description"><strong>Description:</strong> ${vehicle.inv_description}</p>
+          <h2 class="vehicle-main">${year} ${make} ${model}</h2>
+          <p class="vehicle-price"><strong>Price:</strong> ${priceFormatter.format(vehicle.inv_price || 0)}</p>
+          <p class="vehicle-mileage"><strong>Mileage:</strong> ${milesFormatter.format(vehicle.inv_miles || 0)} miles</p>
+          <p><strong>Color:</strong> ${color}</p>
+          <p><strong>Classification:</strong> ${classificationName}</p>
+          <p><strong>Description:</strong> ${description}</p>
+          <ul class="vehicle-specs" aria-label="Vehicle quick specs">
+            <li><strong>Make:</strong> ${make}</li>
+            <li><strong>Model:</strong> ${model}</li>
+            <li><strong>Year:</strong> ${year}</li>
+          </ul>
         </article>
       </div>
     </section>
