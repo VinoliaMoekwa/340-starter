@@ -83,12 +83,12 @@ Util.buildClassificationGrid = async function(data){
  * Build HTML for a single vehicle detail view
  **************************************** */
 Util.buildVehicleDetail = async function (vehicle) {
-  const formatter = new Intl.NumberFormat('en-US', {
+    const priceFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 0,
   })
-  const milesFormatter = new Intl.NumberFormat('en-US')
+  const milesFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 })
 
   return `
     <section class="vehicle-detail">
@@ -97,12 +97,14 @@ Util.buildVehicleDetail = async function (vehicle) {
           <img src="${vehicle.inv_image}" alt="${vehicle.inv_make} ${vehicle.inv_model}" />
         </div>
         <article class="vehicle-detail-info">
-          <h1>${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}</h1>
-          <p class="vehicle-price">Price: ${formatter.format(vehicle.inv_price)}</p>
-          <p class="vehicle-mileage">Mileage: ${milesFormatter.format(vehicle.inv_miles)} miles</p>
-          <p class="vehicle-color">Color: ${vehicle.inv_color}</p>
-          <p class="vehicle-classification">Classification: ${vehicle.classification_name}</p>
-          <p class="vehicle-description">${vehicle.inv_description}</p>
+         <p class="vehicle-price"><strong>Price:</strong> ${priceFormatter.format(vehicle.inv_price)}</p>
+          <p class="vehicle-mileage"><strong>Mileage:</strong> ${milesFormatter.format(vehicle.inv_miles)} miles</p>
+          <p class="vehicle-make"><strong>Make:</strong> ${vehicle.inv_make}</p>
+          <p class="vehicle-model"><strong>Model:</strong> ${vehicle.inv_model}</p>
+          <p class="vehicle-year"><strong>Year:</strong> ${vehicle.inv_year}</p>
+          <p class="vehicle-color"><strong>Color:</strong> ${vehicle.inv_color}</p>
+          <p class="vehicle-classification"><strong>Classification:</strong> ${vehicle.classification_name}</p>
+          <p class="vehicle-description"><strong>Description:</strong> ${vehicle.inv_description}</p>
         </article>
       </div>
     </section>

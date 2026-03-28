@@ -1,3 +1,4 @@
+
 const invModel = require("../models/inventory-model")
 const utilities = require("../utilities/")
 
@@ -39,9 +40,8 @@ invCont.buildVehicleDetailById = async function (req, res, next) {
   }
   const detailHtml = await utilities.buildVehicleDetail(vehicle)
   const nav = await utilities.getNav()
-
-  res.render("./inventory/detail", {
-    title: `${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}`,
+ res.render("./inventory/car-detail", {
+    title: `${vehicle.inv_make} ${vehicle.inv_model}`,
     nav,
     detail: detailHtml,
   })
