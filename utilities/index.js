@@ -1,6 +1,26 @@
 const invModel = require("../models/inventory-model")
 const Util = {}
 
+function buildNavList(classifications = []) {
+const navItems = ['<ul>', '<li><a href="/" title="Home page">Home</a></li>']
+  classifications.forEach((row) => {
+    navItems.push("<li>")
+    navItems.push( 
+   '<a href="/inv/type/' +
+      row.classification_id +
+      '" title="See our inventory of ' +
+      row.classification_name +
+      ' vehicles">' +
+      row.classification_name +
+      "</a>"
+  )
+  navItems.push("</li>")
+})
+
+navItems.push("</ul>")
+  return navItems.join("")
+}
+
 /* ************************
  * Constructs the nav HTML unordered list
  ************************** */
@@ -19,12 +39,11 @@ Util.getNav = async function (req, res, next) {
     console.error("getNav error " + error)
   }
 
-    list += "</li>"
-  }
-  list += "</ul>"
-  return list
+  const classifications =
+    data && data.rows && data.rows.length > 0 ? data.rows : fallbackClassifications
 
-
+  return buildNavList(classifications)
+}
 // Route to build inventory by classification view
 
 /* **************************************
