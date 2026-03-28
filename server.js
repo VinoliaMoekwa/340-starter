@@ -29,10 +29,6 @@ app.use(static)
 app.get("/", utilities.handleErrors(baseController.BuildHome))
 // Inventory routes
 app.use("/inv", inventoryRoute)
-// Test error route
-app.get("/error", (req, res, next) => {
-  next({ status: 500, message: "Test error route" })
-})
 // File Not Found Route - must be last route in list
 app.use((req, res, next) => {
   console.warn(`404 handler: ${req.originalUrl}`)
