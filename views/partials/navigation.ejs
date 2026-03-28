@@ -1,10 +1,5 @@
 <nav>
-  <% 
-    const itemCount = typeof nav === "string" ? (nav.match(/<li>/g) || []).length : 0
-    const shouldUseFallbackNav = itemCount <= 1
-  %>
-
-  <% if (!shouldUseFallbackNav) { %>
+  <% if (typeof nav === "string" && nav.trim().length > 0) { %>
     <%- nav %>
 </nav>
   <% } else { %>
