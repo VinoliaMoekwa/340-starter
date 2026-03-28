@@ -9,12 +9,21 @@ const invCont = {}
 invCont.buildByClassificationId = async function (req, res, next) {
   const classification_id = req.params.classificationId
   const data = await invModel.getInventoryByClassificationId(classification_id)
-  if (!data || !data.length) {
-    return next({ status: 404, message: "No vehicles found for that classification." })
-  }
   const grid = await utilities.buildClassificationGrid(data)
   const nav = await utilities.getNav()
-  const className = data[0].classification_name
+    let className = "Inventory"
+
+  if (data && data.length > 0) {
+    className = data[0].classification_name
+  } else {
+    const classifications = await invModel.getClassifications()
+    const rows = classifications && classifications.rows ? classifications.rows : []
+    const match = rows.find((item) => item.classification_id == classification_id)
+    if (match) {
+      className = match.classification_name
+    }
+  }
+
   res.render("./inventory/classification", {
     title: className + " vehicles",
     nav,
