@@ -5,29 +5,25 @@ const Util = {}
  * Constructs the nav HTML unordered list
  ************************** */
 Util.getNav = async function (req, res, next) {
-  let data = await invModel.getClassifications()
-  let list = "<ul>"
-  list += '<li><a href="/" title="Home page">Home</a></li>'
-  if (!data || !data.rows || data.rows.length === 0) {
-    list += "</ul>"
-    return list
+  const fallbackClassifications = [
+    { classification_id: 1, classification_name: "Custom" },
+    { classification_id: 2, classification_name: "Sedan" },
+    { classification_id: 3, classification_name: "SUV" },
+    { classification_id: 4, classification_name: "Truck" },
+  ]
+
+  let data
+  try {
+    data = await invModel.getClassifications()
+  } catch (error) {
+    console.error("getNav error " + error)
   }
 
-  data.rows.forEach((row) => {
-    list += "<li>"
-    list +=
-      '<a href="/inv/type/' +
-      row.classification_id +
-      '" title="See our inventory of ' +
-      row.classification_name +
-      ' vehicles">' +
-      row.classification_name +
-      "</a>"
     list += "</li>"
-  })
+  }
   list += "</ul>"
   return list
-}
+
 
 // Route to build inventory by classification view
 
