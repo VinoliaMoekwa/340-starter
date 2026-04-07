@@ -1,82 +1,78 @@
-/* ******************************************
- * This server.js file is the primary file of the 
- * application. It is used to control the project.
- *******************************************/
-/* ***********************
- * Require Statements
- *************************/
-const session = require("express-session")
-const pool = require('./database/')
-const expressLayouts = require("express-ejs-layouts")
+const cookieParser = require("cookie-parser")
 const express = require("express")
-const env = require("dotenv").config()
+const expressLayouts = require("express-ejs-layouts")
+const dotenv = require("dotenv").config()
 const app = express()
-const static = require("./routes/static")
+const staticRoutes = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const utilities = require("./utilities")
+const session = require("express-session")
+const flash = require("connect-flash")
+const accountRoute = require("./routes/accountRoute")
 
-
-/* ***********************
- * Routes
- *************************/
 
 /* ***********************
  * Middleware
- * ************************/
- app.use(session({
-  store: new (require('connect-pg-simple')(session))({
-    createTableIfMissing: true,
-    pool,
-  }),
-  secret: process.env.SESSION_SECRET,
+ *************************/
+app.use(cookieParser())
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'fortress_of_solitude',
   resave: true,
   saveUninitialized: true,
   name: 'sessionId',
 }))
 
+app.use(utilities.checkJWTToken)
 
-/*View Engine and Templates*/
+// Messages Middleware
+app.use(flash())
+app.use(function(req, res, next){
+  res.locals.messages = require('express-messages')(req, res)
+  next()
+})
+
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.static("public"))
+
+/* ***********************
+ * View Engine
+ *************************/
 app.set("view engine", "ejs")
 app.use(expressLayouts)
 app.set("layout", "./layouts/layout")
-app.use(express.static("public"))
-app.use(static)
 
-//Index route
-app.get("/", utilities.handleErrors(baseController.BuildHome))
-// Inventory routes
+/* ***********************
+ * Routes
+ *************************/
+app.get("/", utilities.handleErrors(baseController.buildHome))
 app.use("/inv", inventoryRoute)
-// File Not Found Route - must be last route in list
-app.use((req, res, next) => {
-  console.warn(`404 handler: ${req.originalUrl}`)
+app.use(staticRoutes)
+app.use("/account", accountRoute)
+
+// 404 handler
+app.use(async (req, res, next) => {
   next({ status: 404, message: "Sorry, we appear to have lost that page." })
 })
 
 /* ***********************
-* Express Error Handler
-* Place after all other middleware
-*************************/
+ * Global Error Handler
+ *************************/
 app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav()
+  const nav = await utilities.getNav()
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-  res.render("errors/error", {
-    title: err.status || 'Server Error',
-    message: err.message,
+  const message = err.status === 404 ? err.message : "Oh no! There was a crash."
+  res.status(err.status || 500).render("errors/error", {
+    title: err.status || "500",
+    message,
     nav
   })
 })
 
-/* ***********************
- * Local Server Information
- * Values from .env (environment) file
- *************************/
-const port = process.env.PORT || 5500
-const host = process.env.HOST || "localhost"
+const port = process.env.PORT
+const host = process.env.HOST
 
-/* ***********************
- * Log statement to confirm server operation
- *************************/
 app.listen(port, () => {
   console.log(`app listening on ${host}:${port}`)
 })
