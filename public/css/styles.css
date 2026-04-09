@@ -1,389 +1,570 @@
-/* === Page Background & Layout === */
-body {
-  background-image: url("/images/site/checkerboard.jpg");
-  background-repeat: repeat;
+/* =========================
+   RESET + VARIABLES
+   ========================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
-  padding: 20px;
+  padding: 0;
+}
+
+:root {
+  --teal: #0ea5b7;
+  --teal-dark: #0b7280;
+  --nav: #111827;
+  --text: #111827;
+  --muted: #374151;
+  --border: #d1d5db;
+}
+
+/* =========================
+   PAGE BACKGROUND
+   ========================= */
+body {
+  margin: 0;
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 19px;
+  line-height: 1.45;
+  color: var(--text);
+  background: url("/images/site/checkerboard.jpg") repeat;
 }
 
-/* Blue Wrapper */
+/* =========================
+   WHITE "PAGE" CONTAINER
+   ========================= */
 .wrapper {
-  background: #1a1a8a;
-  max-width: 960px;
-  width: 90%;
-  margin: 0 auto;
-  padding: 15px;
+  max-width: 1400px;
+  width: calc(100% - 48px);
+  margin: 28px auto;
+  background: #ffffff;
+  border: 4px solid var(--teal);
+  border-radius: 8px;
+  padding: 26px 30px;
 }
 
-/* White Content Area */
-main {
-  background: #fff;
-  padding: 20px 30px;
-  border: 3px solid #00bcd4;
+/* =========================
+   HEADER
+   ========================= */
+.site-header {
+  padding: 8px 6px 14px;
 }
 
-
-
-/* === Header === */
-#top-header {
+.header-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-}
-
-.siteName a {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #fff;
-  text-decoration: none;
-}
-
-#tools a {
-  font-size: 0.85rem;
-  color: #fff;
-  text-decoration: none;
-}
-
-#tools a:hover {
-  text-decoration: underline;
-}
-
-/* === Navigation === */
-nav {
-  background: black;
-  margin-bottom: 20px;
-}
-
-nav ul {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-}
-
-nav ul li {
-  flex: 1;
-  text-align: center;
-}
-
-nav ul li a {
-  display: block;
-  padding: 10px 0;
-  color: #fff;
-  text-decoration: none;
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
-nav ul li a:hover {
-  background: #333;
-}
-
-/* === Hero Section === */
-h1 {
-  font-size: 1.6rem;
-  font-weight: bold;
-  margin: 20px 0 10px;
-}
-
-.hero-section {
-  position: relative;
-  margin-bottom: 30px;
-  min-height: 200px;
-}
-
-.delorean-info {
-  position: relative;
-  z-index: 2;
-}
-
-.delorean-info h2 {
-  color: #e63946;
-  font-size: 1.4rem;
-  margin-bottom: 5px;
-}
-
-.delorean-info p {
-  color: #2a9d8f;
-  font-size: 0.95rem;
-  margin: 2px 0;
-  font-weight: bold;
-}
-
-.own-today {
-  width: 120px;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-.hero-vehicle {
-  position: absolute;
-  left: 20%;
-  top: 30px;
-}
-
-.delorean {
-  width: 380px;
-}
-
-/* === Main Content — Two Column Layout === */
-.main-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-/* === Vehicle Detail Page === */
-.vehicle-detail {
-  margin-top: 20px;
-}
-
-.vehicle-detail-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  align-items: start;
-}
-
-.vehicle-detail-image img {
-  width: 100%;
-  height: auto;
-  border: 3px solid #00bcd4;
-  border-radius: 8px;
-}
-
-.vehicle-detail-info {
-  display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
-.vehicle-detail-info h1 {
-  margin-top: 0;
-  font-size: 1.6rem;
+.site-name {
+  font-size: clamp(1.5rem, 5vw, 2.6rem);
+  font-weight: 800;
+  text-decoration: none;
+  color: var(--text);
 }
 
-.vehicle-detail-info p {
+.account-link {
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.account-link:hover,
+.account-link:focus-visible {
+  text-decoration: underline;
+}
+
+/* =========================
+   NAVIGATION
+   ========================= */
+.site-nav {
+  background: var(--nav);
+  border-radius: 3px;
+  margin: 0 0 18px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
   margin: 0;
-  font-size: 1rem;
+  padding: 0;
+  min-width: min-content;
 }
 
-.vehicle-price,
-.vehicle-mileage {
-  font-weight: bold;
-  color: #1a1a8a;
+.nav-link {
+  display: block;
+  padding: 14px 22px;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  white-space: nowrap;
 }
 
-.main-content > h3 {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 0;
-  grid-column: 1;
+.nav-link:hover,
+.nav-link:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
 }
 
-.upgrades-grid {
-  grid-column: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
+/* =========================
+   MAIN CONTENT
+   ========================= */
+.content {
+  padding: 0 14px;
 }
 
-.delorean-reviews {
-  grid-column: 2;
-  grid-row: 1 / span 3;
+.page-title {
+  margin: 0 0 16px;
+  font-size: clamp(1.5rem, 5vw, 2.4rem);
+  font-weight: 800;
 }
 
-.upgrade-card {
-  text-align: center;
-  background: #1a1a8a;
-  border-radius: 6px;
-  padding: 15px 10px 10px;
+/* =========================
+   HERO (CAR + OVERLAY CARD)
+   ========================= */
+.hero {
+  position: relative;
+  margin-bottom: 34px;
 }
 
-.upgrade-card img {
+.hero-image-wrap {
   width: 100%;
-  height: 100px;
+}
+
+.hero-image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.hero-card {
+  position: absolute;
+  left: clamp(14px, 3vw, 46px);
+  top: clamp(50px, 15vw, 110px);
+  padding: clamp(10px, 2vw, 16px) clamp(12px, 2.5vw, 18px);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 3px;
+  max-width: calc(100% - 28px);
+}
+
+.hero-title {
+  margin: 0 0 6px;
+  font-size: clamp(1rem, 3vw, 1.45rem);
+  font-weight: 800;
+  color: #0284c7;
+}
+
+.hero-list {
+  margin: 0 0 14px;
+  padding-left: 20px;
+  color: #0284c7;
+  font-weight: 700;
+  font-size: clamp(0.85rem, 2vw, 1.1rem);
+}
+
+.hero-button {
+  display: inline-block;
+  padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 18px);
+  background: var(--teal);
+  border: 2px solid var(--teal-dark);
+  color: #062a2f;
+  font-weight: 800;
+  text-decoration: none;
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  border-radius: 3px;
+}
+
+.hero-button:hover,
+.hero-button:focus-visible {
+  filter: brightness(0.95);
+}
+
+/* =========================
+   LOWER SECTION (UPGRADES + REVIEWS)
+   ========================= */
+.lower {
+  display: grid;
+  gap: 22px;
+}
+
+.section-title {
+  margin: 0 0 12px;
+  font-size: clamp(1.15rem, 3vw, 1.45rem);
+  font-weight: 800;
+}
+
+/* =========================
+   UPGRADES
+   ========================= */
+.upgrade-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 18px 22px;
+}
+
+.upgrade-item {
+  text-decoration: none;
+  color: #0b4a6b;
+  font-weight: 700;
+}
+
+.upgrade-box {
+  background: var(--teal);
+  border: 2px solid var(--teal-dark);
+  min-height: 96px;
+  height: clamp(96px, 15vw, 110px);
+  display: grid;
+  place-items: center;
+  margin-bottom: 8px;
+  border-radius: 3px;
+}
+
+.upgrade-box img {
+  max-width: clamp(50px, 10vw, 74px);
+  max-height: clamp(50px, 10vw, 74px);
+  width: 100%;
+  height: auto;
+  display: block;
   object-fit: contain;
 }
 
-.upgrade-card p {
-  color: #2a9d8f;
-  font-size: 0.85rem;
-  font-weight: bold;
-  margin-top: 8px;
-}
-
-/* === Reviews === */
-.delorean-reviews h3 {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-
-.delorean-reviews ul {
-  list-style-type: disc;
-  padding-left: 20px;
-}
-
-.delorean-reviews li {
-  font-size: 0.9rem;
-  margin-bottom: 10px;
-  line-height: 1.4;
-}
-
-/* === Footer === */
-footer {
+.upgrade-link {
+  text-decoration: underline;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
   text-align: center;
-  font-size: 0.8rem;
-  color: #666;
-  padding: 15px 0 5px;
-  margin-top: 20px;
+  display: block;
 }
 
-/* === Tablet — 768px and below === */
-@media (max-width: 768px) {
-  body {
-    background-image: url("/images/site/small_check.png");
-    padding: 10px;
+/* =========================
+   REVIEWS
+   ========================= */
+.review-list {
+  margin: 0;
+  padding-left: 20px;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+}
+
+.review-list li {
+  margin-bottom: 8px;
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+.site-footer {
+  margin-top: 22px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: clamp(0.85rem, 2vw, 1rem);
+}
+
+/* =========================
+   DESKTOP LAYOUT
+   ========================= */
+@media (min-width: 760px) {
+  .lower {
+    grid-template-columns: 1fr 1fr;
+    gap: 54px;
+    align-items: start;
   }
 
-  .wrapper {
-    width: 95%;
-    padding: 10px;
+  .upgrade-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  main {
-    padding: 15px 20px;
-  }
-
-  .siteName a {
-    font-size: 1.4rem;
-  }
-
-  nav ul li a {
-    font-size: 0.8rem;
-    padding: 8px 0;
-  }
-
-  h1 {
-    font-size: 1.3rem;
-  }
-
-  .hero-section {
-    min-height: 150px;
-  }
-
-  .hero-vehicle {
-    left: 30%;
-  }
-
-  .delorean {
-    width: 280px;
-  }
-
-  .main-content {
-    grid-template-columns: 1fr;
-  }
-
-  .main-content > h3 {
-    grid-column: 1;
-  }
-
-  .upgrades-grid {
-    grid-column: 1;
-  }
-
-  .delorean-reviews {
-    grid-column: 1;
-    grid-row: auto;
+  .hero-image {
+    margin-left: auto;
+    max-width: 1100px;
   }
 }
 
-/* === Mobile — 480px and below === */
-@media (max-width: 480px) {
+/* =========================
+   MOBILE / SMALL SCREENS
+   Optimized for mobile responsiveness
+   NO CHECKERBOARD BACKGROUND
+   ========================= */
+@media (max-width: 759px) {
   body {
-    padding: 5px;
+    font-size: 16px;
+    background: #ffffff;
+    /* Remove checkerboard for mobile */
   }
 
   .wrapper {
     width: 100%;
-    padding: 5px;
+    max-width: none;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    padding: 16px;
   }
 
-  main {
-    padding: 10px 15px;
+  .site-header {
+    padding: 8px 0 10px;
   }
 
-  .siteName a {
+  .content {
+    padding: 0;
+  }
+
+  /* Navigation - scrollable on very small screens */
+  .nav-link {
+    padding: 12px 16px;
+    font-size: 0.95rem;
+  }
+
+  /* Hero adjustments */
+  .hero {
+    margin-bottom: 18px;
+  }
+
+  .hero-card {
+    left: 14px;
+    top: clamp(40px, 12vw, 78px);
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.92);
+  }
+
+  .hero-title {
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+  }
+
+  .hero-list {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+
+  .hero-button {
+    padding: 9px 14px;
+    font-size: 0.9rem;
+  }
+
+  /* Order: Reviews first, then Upgrades */
+  .reviews {
+    order: 1;
+  }
+
+  .upgrades {
+    order: 2;
+  }
+
+  .section-title {
     font-size: 1.2rem;
+    margin-top: 14px;
+    margin-bottom: 10px;
   }
 
-  #tools a {
-    font-size: 0.75rem;
+  /* Upgrades - responsive grid */
+  .upgrade-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 16px;
   }
 
-  nav ul {
-    flex-wrap: wrap;
+  .upgrade-box {
+    height: 90px;
+    min-height: 90px;
   }
 
-  nav ul li {
-    flex: none;
-    width: 33.33%;
+  .upgrade-box img {
+    max-width: 60px;
+    max-height: 60px;
   }
 
-  nav ul li a {
-    font-size: 0.75rem;
-    padding: 6px 0;
+  .upgrade-link {
+    font-size: 0.9rem;
   }
 
-  h1 {
-    font-size: 1.1rem;
+  .review-list {
+    font-size: 0.95rem;
+    padding-left: 18px;
   }
 
-  .hero-section {
-    min-height: auto;
+  .review-list li {
+    margin-bottom: 6px;
   }
 
-  .hero-vehicle {
-    position: relative;
-    left: auto;
-    top: auto;
-    text-align: center;
-    margin-top: 15px;
+  .site-footer {
+    font-size: 0.9rem;
+    margin-top: 18px;
+  }
+}
+
+/* =========================
+   EXTRA SMALL SCREENS
+   ========================= */
+@media (max-width: 480px) {
+  .wrapper {
+    padding: 12px;
   }
 
-  .delorean {
-    width: 100%;
-    max-width: 300px;
+  .site-name {
+    font-size: 1.6rem;
   }
 
-  .delorean-info h2 {
-    font-size: 1.1rem;
-  }
-
-  .delorean-info p {
+  .account-link {
     font-size: 0.85rem;
   }
 
-  .own-today {
-    width: 100px;
+  .page-title {
+    font-size: 1.4rem;
   }
 
-  .upgrades-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+  .nav-link {
+    padding: 10px 12px;
+    font-size: 0.85rem;
   }
 
-  .upgrade-card img {
-    height: 80px;
+  .hero-card {
+    left: 10px;
+    top: clamp(30px, 10vw, 60px);
+    padding: 8px 10px;
   }
 
-  .delorean-reviews li {
+  .hero-title {
+    font-size: 1rem;
+  }
+
+  .hero-list {
     font-size: 0.8rem;
   }
+
+  .hero-button {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .upgrade-grid {
+    gap: 10px 12px;
+  }
+
+  .upgrade-box {
+    height: 80px;
+    min-height: 80px;
+  }
+
+  .upgrade-box img {
+    max-width: 50px;
+    max-height: 50px;
+  }
+
+  .upgrade-link {
+    font-size: 0.85rem;
+  }
+
+  .review-list {
+    font-size: 0.85rem;
+  }
+}
+
+/* =========================
+   VERY SMALL SCREENS
+   ========================= */
+@media (max-width: 360px) {
+  .wrapper {
+    padding: 10px;
+  }
+
+  .hero-card {
+    left: 8px;
+    top: clamp(25px, 8vw, 50px);
+    padding: 6px 8px;
+  }
+
+  .hero-title {
+    font-size: 0.9rem;
+  }
+
+  .hero-list {
+    font-size: 0.75rem;
+    padding-left: 16px;
+  }
+
+  .hero-button {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+
+  .upgrade-box {
+    height: 70px;
+    min-height: 70px;
+  }
+
+  .upgrade-box img {
+    max-width: 45px;
+    max-height: 45px;
+  }
+}
+
+
+
+
+nav {
+  background: #0f172a;
+  padding: 10px 14px;
+  border-radius: 4px;
+  margin: 0 0 18px;
+}
+
+nav>ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+nav>ul>li>a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+nav>ul>li>a:hover,
+nav>ul>li>a:focus {
+  background: rgba(255, 255, 255, 0.12);
+  outline: none;
+}
+
+nav>ul>li>a.active {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+
+
+
+.error-view {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.error-card {
+  margin: 14px 0 18px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 0, 0, 0.25);
+  background: rgba(255, 0, 0, 0.06);
+}
+
+.error-message {
+  margin: 0;
+  font-weight: 700;
+}
+
+.error-fun p {
+  margin: 6px 0;
 }
 
 /* ===== Vehicle Detail Page (W03) ===== */
