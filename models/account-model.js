@@ -1,7 +1,7 @@
 /**************************
  * Account Model
  **************************/
-const pool = require("../database/")
+const pool = require("../database")
  
 /* *****************************
  * Return account data using email address
