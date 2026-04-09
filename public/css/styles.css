@@ -880,3 +880,84 @@ nav>ul>li>a.active {
     content: "Percentage: ";
   }
 }
+.hero-list, .review-list {
+  line-height: 1.6;
+}
+
+.upgrade-link:hover {
+  color: var(--teal-dark);
+  transition: color 0.2s ease-in-out;
+}
+
+.upgrade-box {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.percentage-bar {
+  border-radius: 4px 0 0 4px;
+}
+
+.stat-number {
+  color: #0284c7; /* a bit brighter than current teal */
+}
+
+@media (max-width: 480px) {
+  .upgrade-grid {
+    padding: 0 8px;
+  }
+}
+
+/* =========================
+   BODY / MAIN CONTENT LINKS
+   Homepage buttons + main content links
+   ========================= */
+.content a,
+.hero-button,
+.upgrade-link {
+  display: inline-block;
+  text-decoration: none;      /* remove underline */
+  padding: 10px 16px;         /* button padding */
+  background: var(--teal);    /* teal background */
+  color: #fff;                /* white text */
+  font-weight: 700;
+  border-radius: 10px;        /* rounded corners */
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.content a:hover,
+.hero-button:hover,
+.upgrade-link:hover,
+.content a:focus-visible,
+.hero-button:focus-visible,
+.upgrade-link:focus-visible {
+  background: var(--teal-dark); /* slightly darker on hover */
+  transform: translateY(-1px);  /* subtle lift */
+  outline: none;
+}
+
+/* =========================
+   CAR PAGE LINKS (inventory/detail pages)
+   Outlined teal buttons, no image interference
+   ========================= */
+.vehicle-detail a,
+#inventoryDisplay a {
+  display: inline-block;
+  text-decoration: none;
+  padding: 6px 12px;
+  color: var(--teal-dark);       /* teal text */
+  border: 2px solid var(--teal); /* teal border */
+  border-radius: 10px;           /* rounded corners */
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.vehicle-detail a:hover,
+#inventoryDisplay a:hover,
+.vehicle-detail a:focus-visible,
+#inventoryDisplay a:focus-visible {
+  background: var(--teal);       /* fill teal on hover */
+  color: #fff;                   /* white text on hover */
+  transform: translateY(-1px);
+  outline: none;
+}

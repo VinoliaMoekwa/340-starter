@@ -1,17 +1,4 @@
-<<<<<<< HEAD
-/* ******************************************
- * This server.js file is the primary file of the 
- * application. It is used to control the project.
- *******************************************/
-/* ***********************
- * Require Statements
- *************************/
-
-const session = require("express-session")
-const expressLayouts = require("express-ejs-layouts")
-=======
 const cookieParser = require("cookie-parser")
->>>>>>> c6a3cbed38cad63689bf25f3f4da76b27766b89d
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const dotenv = require("dotenv").config()
@@ -20,24 +7,13 @@ const staticRoutes = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const utilities = require("./utilities")
-<<<<<<< HEAD
-const accountRoute = require("./routes/accountRoute")
-
-=======
 const session = require("express-session")
 const flash = require("connect-flash")
 const accountRoute = require("./routes/accountRoute")
->>>>>>> c6a3cbed38cad63689bf25f3f4da76b27766b89d
 
 
 /* ***********************
  * Middleware
-<<<<<<< HEAD
- * ************************/
- app.use(express.json())
- app.use(express.urlencoded({ extended: true}))
- app.use(express.static("public"))
-=======
  *************************/
 app.use(cookieParser())
 app.use(session({
@@ -59,7 +35,6 @@ app.use(function(req, res, next){
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static("public"))
->>>>>>> c6a3cbed38cad63689bf25f3f4da76b27766b89d
 
 /* ***********************
  * View Engine
@@ -77,11 +52,7 @@ app.use(staticRoutes)
 app.use("/account", accountRoute)
 
 // 404 handler
-<<<<<<< HEAD
-app.use(async(req, res, next) => {
-=======
 app.use(async (req, res, next) => {
->>>>>>> c6a3cbed38cad63689bf25f3f4da76b27766b89d
   next({ status: 404, message: "Sorry, we appear to have lost that page." })
 })
 
@@ -99,18 +70,8 @@ app.use(async (err, req, res, next) => {
   })
 })
 
-<<<<<<< HEAD
-/* ***********************
- * Local Server Information
- * Values from .env (environment) file
- *************************/
 const port = process.env.PORT
 const host = process.env.HOST
-
-=======
-const port = process.env.PORT
-const host = process.env.HOST
->>>>>>> c6a3cbed38cad63689bf25f3f4da76b27766b89d
 
 app.listen(port, () => {
   console.log(`app listening on ${host}:${port}`)

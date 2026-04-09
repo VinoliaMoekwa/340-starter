@@ -1,0 +1,23 @@
+<h1>
+    <%= title %>
+</h1>
+
+<%- messages() %>
+
+    <p>Welcome, <%= locals.accountData.account_firstname %>. You are logged in.</p>
+
+    <ul class="account-management-links">
+        <li>
+            <a href="/account/update/<%= locals.accountData.account_id %>">
+                Edit Account Information
+            </a>
+        </li>
+    </ul>
+
+    <% if (locals.accountData.account_type==='Employee' || locals.accountData.account_type==='Admin' ) { %>
+        <hr>
+        <h2>Inventory Management</h2>
+        <ul class="account-management-links">
+            <li><a href="/inv/">Manage Inventory</a></li>
+        </ul>
+        <% } %>
