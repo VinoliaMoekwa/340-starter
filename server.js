@@ -10,6 +10,7 @@ const utilities = require("./utilities")
 const session = require("express-session")
 const flash = require("connect-flash")
 const accountRoute = require("./routes/accountRoute")
+const favoritesRoute = require("./routes/favoritesRoute")
 
 
 /* ***********************
@@ -50,6 +51,7 @@ app.get("/", utilities.handleErrors(baseController.buildHome))
 app.use("/inv", inventoryRoute)
 app.use(staticRoutes)
 app.use("/account", accountRoute)
+app.use("/favorites", favoritesRoute)
 
 // 404 handler
 app.use(async (req, res, next) => {

@@ -1,37 +1,66 @@
-<% /* Favorites List View */ %>
+<%- include("../partials/header") %>
 
-<h1><%= title %></h1>
+<div class="favorites-page">
 
-<% if (messages && messages.notice) { %>
-  <div class="notice"><%= messages.notice %></div>
-<% } %>
+  <h1><%= title %></h1>
 
-<div class="favorites-header">
-  <p class="favorites-count">
+  <% if (messages && messages.notice) { %>
+    <p class="notice"><%= messages.notice %></p>
+  <% } %>
+
+  <div class="favorites-count">
     <% if (favoriteCount === 0) { %>
-      You haven't added any favorites yet.
+      <p>You haven't added any favorites yet.</p>
     <% } else if (favoriteCount === 1) { %>
-      You have 1 favorite vehicle.
+      <p>You have 1 favorite vehicle.</p>
     <% } else { %>
-      You have <%= favoriteCount %> favorite vehicles.
+      <p>You have <%= favoriteCount %> favorite vehicles.</p>
     <% } %>
-  </p>
+  </div>
 
   <% if (favoriteCount > 0) { %>
-    <a href="/vehicles" class="btn-secondary">Browse More Vehicles</a>
+
+    <div class="favorites-grid">
+
+      <% favorites.forEach(vehicle => { %>
+        <div class="favorite-card">
+
+          <img src="<%= vehicle.inv_thumbnail %>" alt="<%= vehicle.inv_make %> <%= vehicle.inv_model %>">
+
+          <div class="favorite-info">
+            <h3><%= vehicle.inv_make %> <%= vehicle.inv_model %></h3>
+            <p><%= vehicle.inv_price %></p>
+
+            <a href="/inv/detail/<%= vehicle.inv_id %>">View Details</a>
+
+            <button
+              class="btn-remove"
+              data-inv-id="<%= vehicle.inv_id %>">
+              Remove
+            </button>
+
+          </div>
+
+        </div>
+      <% }) %>
+
+    </div>
+
+    <a href="/inv/" class="btn-browse">Browse More Vehicles</a>
+
+  <% } else { %>
+
+    <div class="empty-state">
+      <h2>❤️ Your favorites list is empty</h2>
+      <p>Start adding vehicles you love to your favorites!</p>
+      <a href="/inv/" class="btn-browse">Browse Vehicles</a>
+    </div>
+
   <% } %>
+
 </div>
 
-<% if (favoriteCount === 0) { %>
-  <div class="empty-favorites">
-    <div class="empty-icon">❤️</div>
-    <h2>Your favorites list is empty</h2>
-    <p>Start adding vehicles you love to your favorites!</p>
-    <a href="/vehicles" class="btn-primary">Browse Vehicles</a>
-  </div>
-<% } else { %>
-  <%- favoritesHtml %>
-<% } %>
-
-<!-- JS file should be linked externally, NOT pasted here -->
+<!-- IMPORTANT: external JS ONLY -->
 <script src="/js/favorites.js"></script>
+
+<%- include("../partials/footer") %>
