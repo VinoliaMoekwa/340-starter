@@ -18,27 +18,23 @@ Util.getNav = async function (loggedin = false) {
     list +=
       '<a href="/inv/type/' +
       row.classification_id +
-      '" title="See our inventory of ' +
-      row.classification_name +
-      ' vehicles">' +
+      '">' +
       row.classification_name +
       "</a>"
     list += "</li>"
   })
 
-  // ✅ ALWAYS visible links
   if (loggedin) {
     list += '<li><a href="/favorites">Favorites</a></li>'
     list += '<li><a href="/account">Account</a></li>'
     list += '<li><a href="/account/logout">Logout</a></li>'
   } else {
-    list += '<li><a href="/account/login">Login</a></li>'
+    list += '<li><a href="/account">Account</a></li>'
   }
 
   list += "</ul>"
   return list
 }
-
 /* **************************************
  * Build classification grid
  ************************************** */
