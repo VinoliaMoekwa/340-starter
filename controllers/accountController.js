@@ -61,7 +61,8 @@ async function accountLogin(req, res) {
 
       res.cookie("jwt", accessToken, cookieOptions)
 
-      const redirectTo = redirect || req.query.redirect || "/favorites"
+      // ✅ FIXED: default goes to account management (assignment-safe)
+      const redirectTo = redirect || req.query.redirect || "/account/"
       return res.redirect(redirectTo)
     } else {
       req.flash("notice", "Please check your credentials and try again.")
@@ -108,7 +109,6 @@ async function registerAccount(req, res) {
     account_password
   } = req.body
 
-  // 🔥 PREVENT DUPLICATE EMAILS (IMPORTANT FIX)
   const existing = await accountModel.getAccountByEmail(account_email)
 
   if (existing) {

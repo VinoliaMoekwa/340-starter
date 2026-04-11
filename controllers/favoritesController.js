@@ -3,14 +3,13 @@ const utilities = require("../utilities");
 
 /* ***************************
  * Toggle Favorite (Add / Remove)
- * Called by: /favorites/toggle
  * ************************** */
 async function toggleFavorite(req, res) {
   try {
     const account_id = res.locals.accountData?.account_id;
     const { inv_id } = req.body;
 
-    if (!account_id) {
+    if (!res.locals.loggedin || !account_id) {
       return res.json({
         success: false,
         message: "You must be logged in."
@@ -21,7 +20,6 @@ async function toggleFavorite(req, res) {
     const existing = await favoritesModel.checkFavorite(account_id, inv_id);
 
     if (existing) {
-      // remove it
       await favoritesModel.removeFavorite(account_id, inv_id);
 
       const count = await favoritesModel.countFavorites(account_id);
@@ -33,7 +31,6 @@ async function toggleFavorite(req, res) {
         message: "Removed from favorites"
       });
     } else {
-      // add it
       await favoritesModel.addFavorite(account_id, inv_id);
 
       const count = await favoritesModel.countFavorites(account_id);
@@ -57,14 +54,12 @@ async function toggleFavorite(req, res) {
 /* ***************************
  * Get Favorites Page
  * ************************** */
-
 async function buildFavorites(req, res) {
   try {
     const nav = await utilities.getNav();
-
     const account_id = res.locals.accountData?.account_id;
 
-    if (!account_id) {
+    if (!res.locals.loggedin || !account_id) {
       req.flash("notice", "Please log in to view your favorites");
       return res.redirect("/account/login?redirect=/favorites");
     }
@@ -84,13 +79,21 @@ async function buildFavorites(req, res) {
     return res.status(500).send("Server Error");
   }
 }
+
 /* ***************************
- * Remove Favorite (page fallback)
+ * Remove Favorite
  * ************************** */
 async function removeFavorite(req, res) {
   try {
     const account_id = res.locals.accountData?.account_id;
     const { inv_id } = req.body;
+
+    if (!res.locals.loggedin || !account_id) {
+      return res.json({
+        success: false,
+        message: "Not logged in"
+      });
+    }
 
     await favoritesModel.removeFavorite(account_id, inv_id);
 

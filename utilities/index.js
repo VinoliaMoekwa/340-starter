@@ -7,10 +7,12 @@ const Util = {}
 /* ************************
  * Constructs the nav HTML unordered list
  ************************** */
-Util.getNav = async function () {
+Util.getNav = async function (loggedin = false) {
   let data = await invModel.getClassifications()
+
   let list = "<ul>"
   list += '<li><a href="/" title="Home page">Home</a></li>'
+
   data.rows.forEach((row) => {
     list += "<li>"
     list +=
@@ -23,17 +25,29 @@ Util.getNav = async function () {
       "</a>"
     list += "</li>"
   })
+
+  // ✅ ALWAYS visible links
+  if (loggedin) {
+    list += '<li><a href="/favorites">Favorites</a></li>'
+    list += '<li><a href="/account">Account</a></li>'
+    list += '<li><a href="/account/logout">Logout</a></li>'
+  } else {
+    list += '<li><a href="/account/login">Login</a></li>'
+  }
+
   list += "</ul>"
   return list
 }
 
 /* **************************************
- * Build the classification view HTML grid
- * ************************************ */
+ * Build classification grid
+ ************************************** */
 Util.buildClassificationGrid = async function (data) {
   let grid
+
   if (data.length > 0) {
     grid = '<ul id="inv-display">'
+
     data.forEach((vehicle) => {
       grid += "<li>"
       grid +=
@@ -50,6 +64,7 @@ Util.buildClassificationGrid = async function (data) {
         " " +
         vehicle.inv_model +
         '" /></a>'
+
       grid += '<div class="namePrice">'
       grid += "<hr />"
       grid += "<h2>"
@@ -73,21 +88,24 @@ Util.buildClassificationGrid = async function (data) {
       grid += "</div>"
       grid += "</li>"
     })
+
     grid += "</ul>"
   } else {
     grid = '<p class="notice">No vehicles found.</p>'
   }
+
   return grid
 }
 
 /* **************************************
- * Build inventory detail HTML
- * ************************************ */
+ * Build inventory detail view
+ ************************************** */
 Util.buildInventoryDetail = async function (vehicle) {
   const price = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
   }).format(vehicle.inv_price)
+
   const miles = new Intl.NumberFormat("en-US").format(vehicle.inv_miles)
 
   return `
@@ -95,17 +113,21 @@ Util.buildInventoryDetail = async function (vehicle) {
       <div class="vehicle-image-wrap">
         <img class="vehicle-image" src="${vehicle.inv_image}" alt="${vehicle.inv_make} ${vehicle.inv_model}" />
       </div>
+
       <div class="vehicle-panel">
         <p class="vehicle-badge">
           <span class="vehicle-year">${vehicle.inv_year}</span> &bull; 
           <span class="vehicle-make">${vehicle.inv_make}</span> &bull; 
           <span class="vehicle-model">${vehicle.inv_model}</span>
         </p>
+
         <p class="vehicle-price"><strong>${price}</strong></p>
+
         <dl class="vehicle-specs">
           <dt>Mileage</dt><dd>${miles} miles</dd>
           <dt>Color</dt><dd>${vehicle.inv_color}</dd>
         </dl>
+
         <div class="vehicle-desc">
           <h2>Description</h2>
           <p>${vehicle.inv_description}</p>
@@ -114,38 +136,48 @@ Util.buildInventoryDetail = async function (vehicle) {
     </section>`
 }
 
-/* ****************************************
- * Build the classification select list
- * **************************************** */
+/* **************************************
+ * Build classification select list
+ ************************************** */
 Util.buildClassificationList = async function (classification_id = null) {
   let data = await invModel.getClassifications()
+
   let classificationList =
     '<select name="classification_id" id="classificationList" required>'
+
   classificationList += "<option value=''>Choose a Classification</option>"
+
   data.rows.forEach((row) => {
     classificationList += '<option value="' + row.classification_id + '"'
+
     if (
       classification_id != null &&
       row.classification_id == classification_id
     ) {
       classificationList += " selected "
     }
+
     classificationList += ">" + row.classification_name + "</option>"
   })
+
   classificationList += "</select>"
   return classificationList
 }
 
-/* ****************************************
- * Middleware for handling errors
- **************************************** */
+/* **************************************
+ * Error handler middleware
+ ************************************** */
 Util.handleErrors = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next)
 
-/* ****************************************
- * Middleware to check token validity
- **************************************** */
+/* **************************************
+ * JWT authentication middleware
+ ************************************** */
 Util.checkJWTToken = (req, res, next) => {
+  // ✅ ALWAYS reset state first (fixes inconsistent login bugs)
+  res.locals.loggedin = false
+  res.locals.accountData = null
+
   if (req.cookies.jwt) {
     jwt.verify(
       req.cookies.jwt,
@@ -156,8 +188,9 @@ Util.checkJWTToken = (req, res, next) => {
           res.clearCookie("jwt")
           return res.redirect("/account/login")
         }
+
         res.locals.accountData = accountData
-        res.locals.loggedin = 1
+        res.locals.loggedin = true
         next()
       }
     )
@@ -166,9 +199,9 @@ Util.checkJWTToken = (req, res, next) => {
   }
 }
 
-/* ****************************************
- *  Check Login
- * ************************************ */
+/* **************************************
+ * Login required middleware
+ ************************************** */
 Util.checkLogin = (req, res, next) => {
   if (res.locals.loggedin) {
     next()
