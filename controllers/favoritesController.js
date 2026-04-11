@@ -1,4 +1,5 @@
 const favoritesModel = require("../models/favorites-model");
+const utilities = require("../utilities");
 
 /* ***************************
  * Toggle Favorite (Add / Remove)
