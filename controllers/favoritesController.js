@@ -56,6 +56,7 @@ async function toggleFavorite(req, res) {
 /* ***************************
  * Get Favorites Page
  * ************************** */
+
 async function buildFavorites(req, res) {
   try {
     let nav = await utilities.getNav();
