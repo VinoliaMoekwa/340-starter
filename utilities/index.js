@@ -11,6 +11,7 @@ Util.getNav = async function (loggedin = false) {
   let data = await invModel.getClassifications()
 
   let list = "<ul>"
+
   list += '<li><a href="/" title="Home page">Home</a></li>'
 
   data.rows.forEach((row) => {
@@ -24,13 +25,8 @@ Util.getNav = async function (loggedin = false) {
     list += "</li>"
   })
 
-  if (loggedin) {
-    list += '<li><a href="/favorites">Favorites</a></li>'
-    list += '<li><a href="/account">Account</a></li>'
-    list += '<li><a href="/account/logout">Logout</a></li>'
-  } else {
-    list += '<li><a href="/account">Account</a></li>'
-  }
+  // ALWAYS show Favorites (but protect route on backend)
+  list += '<li><a href="/favorites">Favorites</a></li>'
 
   list += "</ul>"
   return list
