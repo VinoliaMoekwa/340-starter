@@ -62,7 +62,7 @@ async function accountLogin(req, res) {
       res.cookie("jwt", accessToken, cookieOptions)
 
       const redirectTo = redirect || req.query.redirect || "/favorites"
-      return res.redirect(redirectTo)
+      return res.redirect("/account/")
     } else {
       req.flash("notice", "Please check your credentials and try again.")
       return res.status(400).render("account/login", {
