@@ -58,25 +58,28 @@ async function toggleFavorite(req, res) {
  * ************************** */
 async function buildFavorites(req, res) {
   try {
-    const account_id = res.locals.accountData?.account_id;
+    let nav = await utilities.getNav();
 
-    if (!res.locals.loggedin) {
-  req.flash("notice", "Please log in to view favorites")
-  return res.redirect("/account/login?redirect=/favorites")
-}
+    if (!res.locals.loggedin || !res.locals.accountData) {
+      req.flash("notice", "Please log in to view your favorites");
+      return res.redirect("/account/login?redirect=/favorites");
+    }
+
+    const account_id = res.locals.accountData.account_id;
 
     const favorites = await favoritesModel.getFavoritesByAccount(account_id);
     const favoriteCount = await favoritesModel.countFavorites(account_id);
 
-    res.render("favorites/index", {
+    return res.render("favorites/index", {
       title: "My Favorites",
+      nav,
       favorites,
       favoriteCount
     });
 
   } catch (error) {
     console.error("buildFavorites error:", error);
-    res.status(500).send("Server Error");
+    return res.status(500).send("Server Error");
   }
 }
 
