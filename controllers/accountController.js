@@ -15,7 +15,7 @@ async function buildLogin(req, res) {
     title: "Login",
     nav,
     errors: null,
-    redirect: req.query.redirect || ""   // ✅ ADDED
+    redirect: req.query.redirect || ""
   })
 }
 
@@ -24,7 +24,7 @@ async function buildLogin(req, res) {
  * ************************************ */
 async function accountLogin(req, res) {
   let nav = await utilities.getNav()
-  const { account_email, account_password } = req.body
+  const { account_email, account_password, redirect } = req.body
 
   const accountData = await accountModel.getAccountByEmail(account_email)
 
@@ -35,12 +35,17 @@ async function accountLogin(req, res) {
       nav,
       errors: null,
       account_email,
-      redirect: req.body.redirect || ""
+      redirect: redirect || ""
     })
   }
 
   try {
-    if (await bcrypt.compare(account_password, accountData.account_password)) {
+    const passwordMatch = await bcrypt.compare(
+      account_password,
+      accountData.account_password
+    )
+
+    if (passwordMatch) {
       delete accountData.account_password
 
       const accessToken = jwt.sign(
@@ -49,23 +54,15 @@ async function accountLogin(req, res) {
         { expiresIn: 3600 }
       )
 
-      if (process.env.NODE_ENV === "development") {
-        res.cookie("jwt", accessToken, {
-          httpOnly: true,
-          maxAge: 3600 * 1000,
-        })
-      } else {
-        res.cookie("jwt", accessToken, {
-          httpOnly: true,
-          secure: true,
-          maxAge: 3600 * 1000,
-        })
-      }
+      const cookieOptions =
+        process.env.NODE_ENV === "development"
+          ? { httpOnly: true, maxAge: 3600 * 1000 }
+          : { httpOnly: true, secure: true, maxAge: 3600 * 1000 }
 
-      // 🔥 FIXED REDIRECT LOGIC (IMPORTANT)
-      const redirectTo = req.body.redirect || req.query.redirect || "/favorites"
+      res.cookie("jwt", accessToken, cookieOptions)
+
+      const redirectTo = redirect || req.query.redirect || "/favorites"
       return res.redirect(redirectTo)
-
     } else {
       req.flash("notice", "Please check your credentials and try again.")
       return res.status(400).render("account/login", {
@@ -73,10 +70,11 @@ async function accountLogin(req, res) {
         nav,
         errors: null,
         account_email,
-        redirect: req.body.redirect || ""
+        redirect: redirect || ""
       })
     }
   } catch (error) {
+    console.error(error)
     throw new Error("Access Forbidden")
   }
 }
@@ -102,7 +100,21 @@ async function buildRegister(req, res) {
  * ************************************ */
 async function registerAccount(req, res) {
   let nav = await utilities.getNav()
-  const { account_firstname, account_lastname, account_email, account_password } = req.body
+
+  const {
+    account_firstname,
+    account_lastname,
+    account_email,
+    account_password
+  } = req.body
+
+  // 🔥 PREVENT DUPLICATE EMAILS (IMPORTANT FIX)
+  const existing = await accountModel.getAccountByEmail(account_email)
+
+  if (existing) {
+    req.flash("notice", "Email already exists. Please log in.")
+    return res.redirect("/account/login")
+  }
 
   const hashedPassword = await bcrypt.hash(account_password, 10)
 
@@ -115,10 +127,7 @@ async function registerAccount(req, res) {
 
   if (regResult) {
     req.flash("notice", "Congratulations, you are registered! Please log in.")
-
-    // 🔥 send user into favorites flow
-    return res.status(201).redirect("/account/login?redirect=/favorites")
-
+    return res.redirect("/account/login?redirect=/favorites")
   } else {
     req.flash("notice", "Sorry, the registration failed.")
     return res.status(501).render("account/register", {
@@ -137,6 +146,7 @@ async function registerAccount(req, res) {
  * ************************************ */
 async function buildAccountManagement(req, res) {
   let nav = await utilities.getNav()
+
   res.render("account/index", {
     title: "Account Management",
     nav,
@@ -174,7 +184,13 @@ async function buildAccountUpdate(req, res) {
  * ************************************ */
 async function updateAccount(req, res) {
   let nav = await utilities.getNav()
-  const { account_id, account_firstname, account_lastname, account_email } = req.body
+
+  const {
+    account_id,
+    account_firstname,
+    account_lastname,
+    account_email
+  } = req.body
 
   const updateResult = await accountModel.updateAccount(
     account_id,
@@ -193,11 +209,12 @@ async function updateAccount(req, res) {
       { expiresIn: 3600 }
     )
 
-    if (process.env.NODE_ENV === "development") {
-      res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
-    } else {
-      res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
-    }
+    const cookieOptions =
+      process.env.NODE_ENV === "development"
+        ? { httpOnly: true, maxAge: 3600 * 1000 }
+        : { httpOnly: true, secure: true, maxAge: 3600 * 1000 }
+
+    res.cookie("jwt", accessToken, cookieOptions)
 
     req.flash("notice", "Your account information has been updated.")
     return res.redirect("/account/")
@@ -224,7 +241,10 @@ async function updatePassword(req, res) {
 
   const hashedPassword = await bcrypt.hash(account_password, 10)
 
-  const updateResult = await accountModel.updatePassword(account_id, hashedPassword)
+  const updateResult = await accountModel.updatePassword(
+    account_id,
+    hashedPassword
+  )
 
   if (updateResult) {
     req.flash("notice", "Your password has been updated.")
@@ -241,7 +261,7 @@ async function updatePassword(req, res) {
 }
 
 /* ****************************************
- *  Logout — clear JWT cookie and redirect
+ *  Logout
  * ************************************ */
 async function logoutAccount(req, res) {
   res.clearCookie("jwt")
