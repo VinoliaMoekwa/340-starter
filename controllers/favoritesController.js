@@ -6,7 +6,7 @@ const favoritesModel = require("../models/favorites-model");
  * ************************** */
 async function toggleFavorite(req, res) {
   try {
-    const account_id = req.session.account_id; // logged-in user
+    const account_id = res.locals.accountData?.account_id;
     const { inv_id } = req.body;
 
     if (!account_id) {
@@ -58,12 +58,12 @@ async function toggleFavorite(req, res) {
  * ************************** */
 async function buildFavorites(req, res) {
   try {
-    const account_id = req.session.account_id;
+    const account_id = res.locals.accountData?.account_id;
 
-    if (!account_id) {
-      req.flash("notice", "Please log in to view favorites");
-      return res.redirect("/account/login");
-    }
+    if (!res.locals.loggedin) {
+  req.flash("notice", "Please log in to view favorites")
+  return res.redirect("/account/login?redirect=/favorites")
+}
 
     const favorites = await favoritesModel.getFavoritesByAccount(account_id);
     const favoriteCount = await favoritesModel.countFavorites(account_id);
@@ -85,7 +85,7 @@ async function buildFavorites(req, res) {
  * ************************** */
 async function removeFavorite(req, res) {
   try {
-    const account_id = req.session.account_id;
+    const account_id = res.locals.accountData?.account_id;
     const { inv_id } = req.body;
 
     await favoritesModel.removeFavorite(account_id, inv_id);
