@@ -1,6 +1,3 @@
-/**************************
- * Account Controller
- **************************/
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
 const bcrypt = require("bcryptjs")
@@ -13,10 +10,12 @@ const accountModel = require("../models/account-model")
  * ************************************ */
 async function buildLogin(req, res) {
   let nav = await utilities.getNav()
+
   res.render("account/login", {
     title: "Login",
     nav,
     errors: null,
+    redirect: req.query.redirect || ""   // ✅ ADDED
   })
 }
 
@@ -26,17 +25,18 @@ async function buildLogin(req, res) {
 async function accountLogin(req, res) {
   let nav = await utilities.getNav()
   const { account_email, account_password } = req.body
+
   const accountData = await accountModel.getAccountByEmail(account_email)
 
   if (!accountData) {
     req.flash("notice", "Please check your credentials and try again.")
-    res.status(400).render("account/login", {
+    return res.status(400).render("account/login", {
       title: "Login",
       nav,
       errors: null,
       account_email,
+      redirect: req.body.redirect || ""
     })
-    return
   }
 
   try {
@@ -62,14 +62,18 @@ async function accountLogin(req, res) {
         })
       }
 
-      return res.redirect("/account/")
+      // 🔥 FIXED REDIRECT LOGIC (IMPORTANT)
+      const redirectTo = req.body.redirect || req.query.redirect || "/favorites"
+      return res.redirect(redirectTo)
+
     } else {
       req.flash("notice", "Please check your credentials and try again.")
-      res.status(400).render("account/login", {
+      return res.status(400).render("account/login", {
         title: "Login",
         nav,
         errors: null,
         account_email,
+        redirect: req.body.redirect || ""
       })
     }
   } catch (error) {
@@ -82,6 +86,7 @@ async function accountLogin(req, res) {
  * ************************************ */
 async function buildRegister(req, res) {
   let nav = await utilities.getNav()
+
   res.render("account/register", {
     title: "Register",
     nav,
@@ -110,7 +115,10 @@ async function registerAccount(req, res) {
 
   if (regResult) {
     req.flash("notice", "Congratulations, you are registered! Please log in.")
-    return res.status(201).redirect("/account/login")
+
+    // 🔥 send user into favorites flow
+    return res.status(201).redirect("/account/login?redirect=/favorites")
+
   } else {
     req.flash("notice", "Sorry, the registration failed.")
     return res.status(501).render("account/register", {
@@ -176,7 +184,6 @@ async function updateAccount(req, res) {
   )
 
   if (updateResult) {
-    // Update the JWT token with new account data
     const accountData = await accountModel.getAccountById(account_id)
     delete accountData.account_password
 
