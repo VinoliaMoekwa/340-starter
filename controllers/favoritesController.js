@@ -60,14 +60,14 @@ async function toggleFavorite(req, res) {
 
 async function buildFavorites(req, res) {
   try {
-    let nav = await utilities.getNav();
+    const nav = await utilities.getNav();
 
-    if (!res.locals.loggedin || !res.locals.accountData) {
+    const account_id = res.locals.accountData?.account_id;
+
+    if (!account_id) {
       req.flash("notice", "Please log in to view your favorites");
       return res.redirect("/account/login?redirect=/favorites");
     }
-
-    const account_id = res.locals.accountData.account_id;
 
     const favorites = await favoritesModel.getFavoritesByAccount(account_id);
     const favoriteCount = await favoritesModel.countFavorites(account_id);
@@ -84,7 +84,6 @@ async function buildFavorites(req, res) {
     return res.status(500).send("Server Error");
   }
 }
-
 /* ***************************
  * Remove Favorite (page fallback)
  * ************************** */
