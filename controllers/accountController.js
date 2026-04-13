@@ -108,10 +108,16 @@ async function accountLogin(req, res) {
       })
     }
 
-    const passwordMatches = await bcrypt.compare(
-      account_password,
-      accountData.account_password
-    )
+    let passwordMatches = false
+    const storedPassword = accountData.account_password
+    const isBcryptHash = /^\$2[aby]\$\d{2}\$/.test(storedPassword)
+
+    if (isBcryptHash) {
+      passwordMatches = await bcrypt.compare(account_password, storedPassword)
+    } else {
+      // Backward-compatible login for legacy plaintext seeded accounts.
+      passwordMatches = account_password === storedPassword
+    }
 
     if (passwordMatches) {
       delete accountData.account_password
@@ -128,7 +134,7 @@ async function accountLogin(req, res) {
       account_email,
     })
   } catch (error) {
-    req.flash("message warning", "Login failed due to a server error. Please try again.")
+    req.flash("message warning", "Unable to process login right now. Please try again.")
     return res.status(500).render("account/login", {
       title: "Login",
       nav,
@@ -137,7 +143,6 @@ async function accountLogin(req, res) {
     })
   }
 }
-
 
 /* ****************************************
  *  Deliver Account Management view
