@@ -96,63 +96,35 @@ async function registerAccount(req, res) {
 async function accountLogin(req, res) {
   let nav = await utilities.getNav()
   const { account_email, account_password } = req.body
+  const accountData = await accountModel.getAccountByEmail(account_email)
+  if (!accountData) {
+    req.flash("message notice", "Please check your credentials and try again.")
+    res.status(400).render("account/login", {
+      title: "Login",
+      nav,
+      errors: null,
+      account_email,
+    })
+    return
+  }
   try {
-    const accountData = await accountModel.getAccountByEmail(account_email)
-    if (!accountData || !accountData.account_password) {
+    if (await bcrypt.compare(account_password, accountData.account_password)) {
+      delete accountData.account_password
+      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
+      res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
+      return res.redirect("/account/")
+    }
+    else {
       req.flash("message notice", "Please check your credentials and try again.")
-      return res.status(400).render("account/login", {
+      res.status(400).render("account/login", {
         title: "Login",
         nav,
         errors: null,
         account_email,
       })
     }
-
-    let passwordMatches = false
-    const storedPassword = accountData.account_password
-    const isBcryptHash = /^\$2[aby]\$\d{2}\$/.test(storedPassword)
-
-    if (isBcryptHash) {
-      passwordMatches = await bcrypt.compare(account_password, storedPassword)
-    } else {
-      // Backward-compatible login for legacy plaintext seeded accounts.
-      passwordMatches = account_password === storedPassword
-    }
-
-    if (passwordMatches) {
-      delete accountData.account_password
-      if (!process.env.ACCESS_TOKEN_SECRET) {
-        console.error("ACCESS_TOKEN_SECRET is not set. Cannot sign login token.")
-        req.flash("message warning", "Login is temporarily unavailable. Please contact support.")
-        return res.status(500).render("account/login", {
-          title: "Login",
-          nav,
-          errors: null,
-          account_email,
-        })
-      }
-
-      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
-      res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
-      return res.redirect("/account/")
-    }
-
-    req.flash("message notice", "Please check your credentials and try again.")
-    return res.status(400).render("account/login", {
-      title: "Login",
-      nav,
-      errors: null,
-      account_email,
-    })
   } catch (error) {
-    console.error(`Login error for "${account_email}":`, error.message)
-    req.flash("message warning", "Unable to process login right now. Please try again.")
-    return res.status(500).render("account/login", {
-      title: "Login",
-      nav,
-      errors: null,
-      account_email,
-    })
+    throw new Error('Access Forbidden')
   }
 }
 
@@ -261,5 +233,6 @@ async function accountLogout(req, res) {
   res.locals.loggedin = ''
   return res.redirect("/")
 }
+
 
 module.exports = { buildLogin, buildRegister, registerAccount, accountLogin, buildManagement, buildUpdate, processUpdate, processPassword, accountLogout }

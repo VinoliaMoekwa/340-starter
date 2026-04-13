@@ -45,9 +45,12 @@ async function getAccountByEmail (account_email) {
       [account_email])
     return result.rows[0]
   } catch (error) {
-    throw new Error("Database query failed while fetching account by email.")
+    return new Error("No matching email found")
   }
 }
+
+
+
 /* *****************************
  *  Return account using account_id
  *  Unit 5, Assignment 5, Task 5
