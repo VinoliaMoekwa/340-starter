@@ -96,37 +96,48 @@ async function registerAccount(req, res) {
 async function accountLogin(req, res) {
   let nav = await utilities.getNav()
   const { account_email, account_password } = req.body
-  const accountData = await accountModel.getAccountByEmail(account_email)
-  if (!accountData) {
-    req.flash("message notice", "Please check your credentials and try again.")
-    res.status(400).render("account/login", {
-      title: "Login",
-      nav,
-      errors: null,
-      account_email,
-    })
-    return
-  }
   try {
-    if (await bcrypt.compare(account_password, accountData.account_password)) {
-      delete accountData.account_password
-      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
-      res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
-      return res.redirect("/account/")
-    }
-    else {
+    const accountData = await accountModel.getAccountByEmail(account_email)
+    if (!accountData || !accountData.account_password) {
       req.flash("message notice", "Please check your credentials and try again.")
-      res.status(400).render("account/login", {
+      return res.status(400).render("account/login", {
         title: "Login",
         nav,
         errors: null,
         account_email,
       })
     }
+
+    const passwordMatches = await bcrypt.compare(
+      account_password,
+      accountData.account_password
+    )
+
+    if (passwordMatches) {
+      delete accountData.account_password
+      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
+      res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
+      return res.redirect("/account/")
+    }
+
+    req.flash("message notice", "Please check your credentials and try again.")
+    return res.status(400).render("account/login", {
+      title: "Login",
+      nav,
+      errors: null,
+      account_email,
+    })
   } catch (error) {
-    throw new Error('Access Forbidden')
+    req.flash("message warning", "Login failed due to a server error. Please try again.")
+    return res.status(500).render("account/login", {
+      title: "Login",
+      nav,
+      errors: null,
+      account_email,
+    })
   }
 }
+
 
 /* ****************************************
  *  Deliver Account Management view
@@ -233,6 +244,5 @@ async function accountLogout(req, res) {
   res.locals.loggedin = ''
   return res.redirect("/")
 }
-
 
 module.exports = { buildLogin, buildRegister, registerAccount, accountLogin, buildManagement, buildUpdate, processUpdate, processPassword, accountLogout }
