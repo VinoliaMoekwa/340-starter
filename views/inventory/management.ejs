@@ -1,28 +1,30 @@
-<div class="management-view">
-    <h1>
-        <%= title %>
-    </h1>
+<%# Unit 4, Select Inv Item activity %>
+<% if (title) {%>
+<h1><%= title %></h1>
+<%} else {res.redirect('/')} %>
 
-    <%- messages() %>
+<%- messages() %>
 
-        <ul class="management-links">
-            <li><a href="/inv/add-classification">Add New Classification</a></li>
-            <li><a href="/inv/add-inventory">Add New Vehicle</a></li>
-        </ul>
 
-        <!-- Inventory Management Section -->
-        <h2>Manage Inventory</h2>
+<% if (errors) { %>
+<ul class="message warning">
+  <% errors.array().forEach(error => { %>
+  <li><%= error.msg %></li>
+  <%  }) %>
+</ul>
+<% } %>
 
-        <p>
-            Select a classification from the list below to see the inventory items
-            that belong to that classification.
-        </p>
+<ul class="boldList">
+  <li><a href="/inv/newClassification/" title="Click to add a new vehicle classification">Add New Classification</a></li>
+  <li><a href="/inv/newVehicle/" title="Click to add a new vehicle">Add New Vehicle</a></li>
+</ul>
 
-        <%- classificationSelect %>
+<h2>Manage Inventory</h2>
+<p>Choose a classification to see those inventory items.</p>
+<%- classificationSelect %>
 
-            <table id="inventoryDisplay"></table>
+<table id="inventoryDisplay"></table>
 
-            <noscript>JavaScript must be enabled to use this page.</noscript>
-</div>
+<noscript>JavaScript must be enabled to use this page.</noscript>
 
 <script src="../../js/inventory.js"></script>
