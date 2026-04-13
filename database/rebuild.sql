@@ -3,7 +3,7 @@
 -- DROP TYPE IF EXISTS public.account_type;
 
 CREATE TYPE public.account_type AS ENUM
-    ('Client', 'Employee', 'Admin');
+    ('Admin', 'Client', 'Employee');
 
 ALTER TYPE public.account_type
     OWNER TO cse340_database_zxki_user;
