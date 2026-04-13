@@ -121,6 +121,17 @@ async function accountLogin(req, res) {
 
     if (passwordMatches) {
       delete accountData.account_password
+      if (!process.env.ACCESS_TOKEN_SECRET) {
+        console.error("ACCESS_TOKEN_SECRET is not set. Cannot sign login token.")
+        req.flash("message warning", "Login is temporarily unavailable. Please contact support.")
+        return res.status(500).render("account/login", {
+          title: "Login",
+          nav,
+          errors: null,
+          account_email,
+        })
+      }
+
       const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
       res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
       return res.redirect("/account/")
@@ -134,6 +145,7 @@ async function accountLogin(req, res) {
       account_email,
     })
   } catch (error) {
+    console.error(`Login error for "${account_email}":`, error.message)
     req.flash("message warning", "Unable to process login right now. Please try again.")
     return res.status(500).render("account/login", {
       title: "Login",
