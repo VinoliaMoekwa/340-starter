@@ -1,130 +1,142 @@
+// Needed Resources 
 const express = require("express")
-const router = new express.Router()
+const router = new express.Router() 
 const invController = require("../controllers/invController")
-const utilities = require("../utilities/")
-const invValidate = require("../utilities/inventory-validation")
+const utilities = require("../utilities")
+const invChecks = require("../utilities/inventory-validation")
 
-// --- Protected Management Routes ---
+router.get("/type/:classificationId", invController.buildByClassificationId);
+
 
 /* ****************************************
- * Build inventory management view
- * *************************************** */
+ * Route to build vehicle detail view
+ **************************************** */
+router.get("/detail/:id", 
+utilities.handleErrors(invController.buildDetail))
+
+/* ****************************************
+ * Error Route
+ * Assignment 3, Task 3
+ **************************************** */
+router.get(
+  "/broken",
+  utilities.handleErrors(invController.throwError)
+)
+
+/* ****************************************
+ * Build Management View Route
+ * Assignment 4, Task 1
+ * checkAccountType added Unit 5, Assignment 5, Task 2
+ **************************************** */
 router.get(
   "/",
-  utilities.checkLogin,
-  utilities.handleErrors(invController.buildManagement)
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.buildManagementView)
 )
 
 /* ****************************************
- * Return inventory by classification as JSON (AJAX)
- * *************************************** */
+ * Build add-classification View Route
+ * Assignment 4, Task 2
+ * checkAccountType added Unit 5, Assignment 5, Task 2
+ **************************************** */
 router.get(
-  "/getInventory/:classification_id",
-  utilities.handleErrors(invController.getInventoryJSON)
+  "/newClassification",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.newClassificationView)
 )
 
-/* ****************************************
- * Build add-classification view
- * *************************************** */
-router.get(
-  "/add-classification",
-  utilities.checkLogin,
-  utilities.handleErrors(invController.buildAddClassification)
-)
 
 /* ****************************************
- * Process add-classification
- * *************************************** */
+ * Process add-classification Route
+ * Assignment 4, Task 2
+ * checkAccountType added Unit 5, Assignment 5, Task 2
+ **************************************** */
 router.post(
-  "/add-classification",
-  utilities.checkLogin,
-  invValidate.classificationRules(),
-  invValidate.checkClassificationData,
+  "/addClassification",
+  utilities.checkAccountType,
+  invChecks.classificationRule(),
+  invChecks.checkClassificationData,
   utilities.handleErrors(invController.addClassification)
 )
 
 /* ****************************************
- * Build add-inventory view
- * *************************************** */
+ * Build add-vehicle View Route
+ * Assignment 4, Task 3
+ * checkAccountType added Unit 5, Assignment 5, Task 2
+ **************************************** */
 router.get(
-  "/add-inventory",
-  utilities.checkLogin,
-  utilities.handleErrors(invController.buildAddInventory)
+  "/newVehicle",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.newInventoryView)
 )
 
 /* ****************************************
- * Process add-inventory
- * *************************************** */
+ * Process add-vehicle Route
+ * Assignment 4, Task 3
+ * checkAccountType added Unit 5, Assignment 5, Task 2
+ **************************************** */
 router.post(
-  "/add-inventory",
-  utilities.checkLogin,
-  invValidate.inventoryRules(),
-  invValidate.checkInventoryData,
+  "/addInventory",
+  utilities.checkAccountType,
+  invChecks.newInventoryRules(),
+  invChecks.checkInventoryData,
   utilities.handleErrors(invController.addInventory)
 )
 
 /* ****************************************
- * Deliver edit inventory view
- * *************************************** */
+ * Get vehicles for AJAX Route
+ * Unit 5, Select inv item activity
+ **************************************** */
 router.get(
-  "/edit/:invId",
-  utilities.checkLogin,
-  utilities.handleErrors(invController.buildEditInventory)
+  "/getInventory/:classification_id",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.getInventoryJSON)
 )
 
 /* ****************************************
- * Process inventory update
- * *************************************** */
+ * Deliver the edit inventory view
+ * Unit 5, Update Step 1 Activity
+ * checkAccountType added Unit 5, Assignment 5, Task 2
+ **************************************** */
+router.get(
+  "/edit/:inv_id",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.editInvItemView)
+)
+
+/* ****************************************
+ * Process the edit inventory request
+ * Unit 5, Update Step 2 Activity
+ * checkAccountType added Unit 5, Assignment 5, Task 2
+ **************************************** */
 router.post(
   "/update",
-  utilities.checkLogin,
-  invValidate.inventoryRules(),
-  invValidate.checkUpdateData,
+  utilities.checkAccountType,
+  invChecks.newInventoryRules(),
+  invChecks.checkUpdateData,
   utilities.handleErrors(invController.updateInventory)
 )
 
 /* ****************************************
- * Deliver delete confirmation view
- * *************************************** */
+ * Deliver the delete confirmation view
+ * Unit 5, Delete Activity
+ * checkAccountType added Unit 5, Assignment 5, Task 2
+ **************************************** */
 router.get(
-  "/delete/:invId",
-  utilities.checkLogin,
-  utilities.handleErrors(invController.buildDeleteConfirmation)
+  "/delete/:inv_id",
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.deleteView)
 )
 
 /* ****************************************
- * Process inventory delete
- * *************************************** */
-router.post(
-  "/delete",
-  utilities.checkLogin,
-  utilities.handleErrors(invController.deleteInventory)
+ * Process the delete inventory request
+ * Unit 5, Delete Activity
+ * checkAccountType added Unit 5, Assignment 5, Task 2
+ **************************************** */
+router.post("/delete", 
+utilities.checkAccountType, 
+utilities.handleErrors(invController.deleteItem)
 )
 
-// --- Public Display Routes ---
 
-/* ****************************************
- * Display inventory by classification
- * *************************************** */
-router.get(
-  "/type/:classificationId",
-  utilities.handleErrors(invController.buildByClassificationId)
-)
-
-/* ****************************************
- * Display inventory item detail
- * *************************************** */
-router.get(
-  "/detail/:invId",
-  utilities.handleErrors(invController.buildByInventoryId)
-)
-
-/* ****************************************
- * Display vehicle statistics (Enhancement)
- * *************************************** */
-router.get(
-  "/statistics",
-  utilities.handleErrors(invController.buildStatistics)
-)
-
-module.exports = router
+module.exports = router;
