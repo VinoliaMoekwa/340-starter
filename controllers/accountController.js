@@ -97,13 +97,13 @@ async function accountLogin(req, res) {
   let nav = await utilities.getNav()
   const { account_email, account_password } = req.body
   const accountData = await accountModel.getAccountByEmail(account_email)
-  if (!accountData) {
-    req.flash("message notice", "Please check your credentials and try again.")
-    res.status(400).render("account/login", {
-      title: "Login",
-      nav,
-      errors: null,
-      account_email,
+  if (!accountData || !accountData.account_password) {
+  req.flash("message notice", "Invalid email or password.")
+  return res.status(400).render("account/login", {
+    title: "Login",
+    nav,
+    errors: null,
+    account_email,
     })
     return
   }
