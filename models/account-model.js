@@ -1,18 +1,32 @@
-/**************************
- * Account Model
- **************************/
-const pool = require("../database")
- 
+/* ***************************
+ *  Account model
+ *  Unit 4, Process Registration Activity
+ * ************************** */
+
+const pool = require("../database/")
+
 /* *****************************
- * Return account data using email address
- * ***************************** */
-async function getAccountByEmail(account_email) {
+*   Register new account
+ *  Unit 4, Process Registration Activity
+* *************************** */
+async function registerAccount(account_firstname, account_lastname, account_email, account_password){
   try {
-    const result = await pool.query(
-      "SELECT account_id, account_firstname, account_lastname, account_email, account_type, account_password FROM account WHERE account_email = $1",
-      [account_email]
-    )
-    return result.rows[0]
+    const sql = "INSERT INTO account (account_firstname, account_lastname, account_email, account_password, account_type) VALUES ($1, $2, $3, $4, 'Client') RETURNING *"
+    return await pool.query(sql, [account_firstname, account_lastname, account_email, account_password])
+  } catch (error) {
+    return error.message
+  }
+}
+
+/* **********************
+ *  Check for existing email
+ *  Unit 4, Stickiness Activity
+ * ********************* */
+async function checkExistingEmail(account_email){
+  try {
+    const sql = "SELECT * FROM account WHERE account_email = $1"
+    const email = await pool.query(sql, [account_email])
+    return email.rowCount
   } catch (error) {
     return error.message
   }
@@ -21,31 +35,30 @@ async function getAccountByEmail(account_email) {
 
 
 /* *****************************
- * Register new account
- * ***************************** */
-async function registerAccount(account_firstname, account_lastname, account_email, account_password) {
+* Return account data using email address
+* Unit 5, Login activity
+* ***************************** */
+async function getAccountByEmail (account_email) {
   try {
-    const sql =
-      "INSERT INTO account (account_firstname, account_lastname, account_email, account_password, account_type) VALUES ($1, $2, $3, $4, 'Client') RETURNING *"
-    const result = await pool.query(sql, [
-      account_firstname,
-      account_lastname,
-      account_email,
-      account_password,
-    ])
+    const result = await pool.query(
+      'SELECT account_id, account_firstname, account_lastname, account_email, account_type, account_password FROM account WHERE account_email = $1',
+      [account_email])
     return result.rows[0]
   } catch (error) {
-    return error
+    return new Error("No matching email found")
   }
 }
 
-/* ***************
- * Get account by ID
- * *************** */
-async function getAccountById(account_id) {
+
+
+/* *****************************
+ *  Return account using account_id
+ *  Unit 5, Assignment 5, Task 5
+ * ***************************** */
+async function getAccountById (account_id) {
   try {
-    const result = await pool.query(
-      "SELECT account_id, account_firstname, account_lastname, account_email, account_type FROM public.account WHERE account_id = $1",
+    const res = await pool.query(
+      'SELECT account_id, account_firstname, account_lastname, account_email, account_type, account_password FROM account WHERE account_id = $1',
       [account_id]
     )
     return res.rows[0]
