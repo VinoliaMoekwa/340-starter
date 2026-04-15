@@ -48,7 +48,7 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
       pg:
-        specifier: ^8.8.0
+        specifier: ^8.20.0
         version: 8.20.0
     devDependencies:
       nodemon:
