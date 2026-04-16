@@ -52,7 +52,6 @@ invCont.buildDetail = async function (req, res, next) {
     vehicle,
   })
 }
-
 /* ****************************************
  *  Process intentional error
  *  Assignment 3, Task 3

@@ -1,36 +1,56 @@
-<% if (favoriteCount > 0) { %>
+<div class="favorites-page">
 
-  <div class="favorites-grid">
-    <% favorites.forEach(vehicle => { %>
-      <div class="favorite-card">
+  <h1><%= title %></h1>
 
-        <img src="<%= vehicle.inv_thumbnail %>" alt="<%= vehicle.inv_make %> <%= vehicle.inv_model %>">
+  <% if (messages && messages.notice) { %>
+    <p class="notice"><%= messages.notice %></p>
+  <% } %>
 
-        <div class="favorite-info">
-          <h3><%= vehicle.inv_make %> <%= vehicle.inv_model %></h3>
-          <p><%= vehicle.inv_price %></p>
+  <div class="favorites-count">
+    <% if (favoriteCount === 0) { %>
+      <p>You haven't added any favorites yet.</p>
+    <% } else if (favoriteCount === 1) { %>
+      <p>You have 1 favorite vehicle.</p>
+    <% } else { %>
+      <p>You have <%= favoriteCount %> favorite vehicles.</p>
+    <% } %>
+  </div>
 
-          <a href="/inv/detail/<%= vehicle.inv_id %>">View Details</a>
+  <% if (favoriteCount > 0) { %>
 
-          <button
-            class="btn-remove"
-            data-inv-id="<%= vehicle.inv_id %>">
-            Remove
-          </button>
+    <div class="favorites-grid">
+
+      <% favorites.forEach(vehicle => { %>
+        <div class="favorite-card">
+
+          <img
+            src="<%= vehicle.inv_thumbnail %>"
+            alt="<%= vehicle.inv_make %> <%= vehicle.inv_model %>"
+          >
+
+          <div class="favorite-info">
+            <h3><%= vehicle.inv_make %> <%= vehicle.inv_model %></h3>
+            <p>$<%= new Intl.NumberFormat('en-US').format(vehicle.inv_price) %></p>
+
+            <a href="/inv/detail/<%= vehicle.inv_id %>">View Details</a>
+
+            <p class="favorite-note">
+              To add or remove items from your favorites, view details.
+            </p>
+          </div>
 
         </div>
+      <% }) %>
 
-      </div>
-    <% }) %>
-  </div>
+    </div>
 
-<% } else { %>
+  <% } else { %>
 
-  <div class="empty-state">
-    <h2>❤️ Your favorites list is empty</h2>
-    <p>Start adding vehicles you love to your favorites!</p>
-  </div>
+    <div class="empty-state">
+      <h2>❤️ Your favorites list is empty</h2>
+      <p>To add or remove items from your favorites, view details.</p>
+    </div>
 
-<% } %>
+  <% } %>
 
-<script src="/js/favorites.js"></script>
+</div>

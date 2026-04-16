@@ -18,9 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json()
 
       if (data.success) {
-        favoriteButton.textContent = data.isFavorite
-          ? "Remove from Favorites"
-          : "Add to Favorites"
+        alert(data.message)
       } else {
         alert(data.message || "Could not update favorite.")
       }
