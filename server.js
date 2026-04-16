@@ -13,6 +13,7 @@ const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute")
+const favoritesRoute = require("./routes/favoritesRoute")
 const utilities = require("./utilities/")
 const session = require("express-session")
 const pool = require('./database/')
@@ -76,6 +77,7 @@ app.set("layout", "./layouts/layout") // not at views root
 
 
 
+
 /* ***********************
  * Routes
  *************************/
@@ -86,6 +88,7 @@ app.get("/", utilities.handleErrors(baseController.buildHome))
 app.use("/inv", inventoryRoute)
 // Account routes - Unit 4, Deliver Login activity
 app.use("/account", accountRoute)
+app.use("/favorites", favoritesRoute)
 
 
 
