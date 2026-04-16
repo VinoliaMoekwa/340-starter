@@ -17,19 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await response.json()
 
         if (data.success) {
-          button.closest(".favorite-card").remove()
-
-          const countText = document.querySelector(".favorites-count p")
-          if (countText) {
-            if (data.favoriteCount === 0) {
-              countText.textContent = "You haven't added any favorites yet."
-              window.location.reload()
-            } else if (data.favoriteCount === 1) {
-              countText.textContent = "You have 1 favorite vehicle."
-            } else {
-              countText.textContent = `You have ${data.favoriteCount} favorite vehicles.`
-            }
-          }
+          window.location.reload()
         } else {
           alert(data.message || "Could not remove favorite.")
         }
